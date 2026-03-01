@@ -1,65 +1,58 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 import xarray as xr
+import matplotlib.colors as mcolors
 from pathlib import Path
-from netCDF4 import Dataset as NetCDFFile
 
 # Data path
 era_path = Path("/home/desan/ESM-data/")
-
 top_sw_down = era_path / 'zonal_avg_top_sw_down.nc'
 
-# Open dataset
-data = NetCDFFile(top_sw_down)
+data = xr.open_dataset(top_sw_down)
 
-#Variable:
-var = data.variables['avg_tdswrf'][:]
-print(var)
-
-lat = np.arange(-90.0, 90.25, 0.25)
-date = np.arange(0, 360, 1)
-    
-dates, lats = np.meshgrid(date, lat)
-
-# Figure and map projection
-fig = plt.figure(figsize=(20, 10))
-var = var[:,:,0]
+var = data['avg_tdswrf']
+var = var.squeeze() #12x721
 var = var.transpose()
-#ax = plt.axes(projection=ccrs.Robinson(central_longitude=180))
-plt.contourf(dates, lats, var, 10)
-    #Colormap:
-    #minval = 0.0
-    #maxval = 1.0
-    #cmap = plt.get_cmap(cmaps[nn])
-    #n=16
-    #new_cmap = colors.LinearSegmentedColormap.from_list('trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
-    #    cmap(np.linspace(minval, maxval, n)))
-    
-    # Plot
-    #var.plot(
-    #ax=ax,
-    #x="longitude",
-    #y="latitude",
-    #transform=ccrs.PlateCarree(),
-    #cmap = 'turbo',
-    #cbar_kwargs={"label": texts[nn] + " (W/m²)"}
-    #)
+var = np.flipud(var)
+var = np.ma.masked_where(var <= 0, var)
+levels = np.arange(0, 650, 50)
 
-    #plt.contourf([lons, lats], var2, [16], cmap='turbo')
-    # Gridlines
-    #gl = ax.gridlines(
-    #draw_labels=True,
-    #linewidth=0.5,
-    #color="black",
-    #alpha=0.5,
-    #linestyle="-"
-    #)
+cmap_base = plt.cm.jet
+colors = cmap_base(np.linspace(0, 1, len(levels)-1))
+colors[0] = [1, 1, 1, 1]
+cmap = mcolors.ListedColormap(colors)
+#cmap.set_under('white')
+#cmap.set_bad('white')
 
-    # Labels and title
-#ax.set_title('Annual mean (ERA5 1991-2020): '+ texts[nn])
+lat = np.arange(-90.0, 90.25, 0.25) #721
+date = np.arange(0, 12, 1) #12
 
-plt.show()
-    #plt.savefig("grafica"+str(nn)+".png")
+plt.figure(figsize=(10, 10))
+ax = plt.axes()
+ax.set_facecolor('white')
+ax.set_box_aspect(1)
+
+cs = plt.contour(date, lat, var, 10,
+    colors='k',
+    linewidths=0.5,
+    add_colorbar = False)
+
+cf = plt.contourf(date, lat, var,
+             levels = levels,
+             cmap=cmap,
+             extend='neither')
+
+fz=16
+plt.xlabel("Month", fontsize=fz)
+plt.ylabel("Latitude", fontsize=fz)
+plt.title("Zonal mean based on daily insolation", fontsize=fz, fontweight='bold')
+cbar = plt.colorbar(cf, ticks=[0] + list(levels))
+cbar.set_label(r"W m$^{-2}$", fontsize=fz)
+cbar.ax.tick_params(labelsize=fz)
+ax.set_xticks(np.arange(0,12,1))
+ax.set_xticklabels(['J','F','M','A','M','J','J','A','S','O','N','D'], fontsize=fz)
+ax.set_yticks(np.arange(-90,90.25,30))
+ax.set_yticklabels(['90S','60S','30S','0','30N','60N','90N'], fontsize=fz)
+
+plt.savefig('zonalmean.png')
+
