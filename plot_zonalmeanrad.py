@@ -17,6 +17,7 @@ var = [  ]
 for i in cases:
     data = xr.open_dataset(i)
     dat = data[varc[n]].squeeze()
+    dat = np.flip(dat)
     var.append(dat)
     n = n+1
 
@@ -45,7 +46,7 @@ ax[0].legend(['Absorbed solar radiation','Outgoing longwave radiation'],
 ax[0].set_title('Radiation zonal mean at the TOA in annual mean',
                 fontweight='bold')
 
-ax[1].plot(lat, var[0]- (-1.0*var[1]),
+ax[1].plot(lat, var[0] + var[1],
            color='g',
            linestyle='-')
 ax[1].set_yticks(np.arange(-140, 80, 20))
