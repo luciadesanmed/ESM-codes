@@ -6,13 +6,12 @@ from pathlib import Path
 
 # Data path
 era_path = Path("/home/desan/ESM-data/")
-net_rad = era_path / 'ags-avg-net-surface-rad.nc'
-net_sh = era_path / 'ags-avg-sensible-heat.nc'
-net_lh = era_path / 'ags-avg-surface-latent-heat.nc'
-ht_str = era_path / 'ags-avg-heat-storage.nc'
+pet = era_path / 'ags-avg-pot-evap.nc'
+p = era_path / 'ags-avg-prec.nc'
+e = era_path / 'ags-avg-evap.nc'
 
-cases = (net_rad, net_lh, net_sh, ht_str)
-varc = ('ssr', 'avg_slhtf','avg_ishf', 'ssr')
+cases = (pet, p, e)
+varc = ('pev', 'tp','e')
 
 #latmin =  21.5139417 #21°30'50.19"N
 #latmax =  22.4147556 #22°24'53.12"N
@@ -31,28 +30,25 @@ mth = np.arange(1, 12.1, 1) #12 months
 
 fz = 12
 
-plt.plot(mth, var[0],
+plt.plot(mth, -1000*var[0],
           color='k',
            linestyle='-')
-plt.plot(mth, -1*var[1],
+plt.plot(mth, 1000*var[1],
            color='b',
            linestyle='--')
-plt.plot(mth, -1*var[2],
+plt.plot(mth, -1000*var[2],
          color='r',
          linestyle='--')
-plt.plot(mth, var[3],
-         color='y',
-         linestyle='--')
 plt.xlabel("Month", fontsize=fz, fontweight='bold')
-plt.ylabel(r" W m$^{-2}$", fontsize=fz, fontweight='bold')
-plt.yticks(np.arange(-50,300.1,50))
+plt.ylabel(r" mm day$^{-1}$", fontsize=fz, fontweight='bold')
+#plt.yticks(np.arange(-50,300.1,50))
 plt.xticks(np.arange(1, 12.1, 1), labels=['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'], fontsize=fz)
-plt.ylim(-49, 300)
-plt.legend(['Rn','LE','SH','G'],
+#plt.ylim(-49, 300)
+plt.legend(['PET','P','E'],
              edgecolor='white')
-plt.title('Radiation fluxes (ERA5 1991-2020) \nAguascalientes, Mexico',
+plt.title('Terrestrial water balance (ERA5 1991-2020) \nAguascalientes, Mexico',
                 fontweight='bold')
 
 
-plt.savefig('ags-radiation.png')
+plt.savefig('ags-hydro.png')
 #plt.show()
