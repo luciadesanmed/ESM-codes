@@ -13,7 +13,7 @@ var = data['avg_sdswrf'].squeeze()
 
 month = np.arange(1, 12.1, 1) #12 months
 
-fz = 16
+fz = 22
 
 plt.figure(figsize=(20, 10))
 plt.rcParams.update({'font.size': fz})
@@ -24,9 +24,10 @@ ax.plot(month, var,
 ax.set_yticks(np.arange(175, 197, 2.5))
 ax.set_xticks(np.arange(1, 12.1, 1))
 ax.set_xticklabels(['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'], fontsize=fz)
-ax.set_ylabel("Global mean SW down" +  r" (W m$^{-2}$)", fontsize=fz)
-ax.set_xlabel('Month', fontsize=fz)
+ax.set_ylabel("Global mean SW down" +  r" (W m$^{-2}$)", fontsize=fz, fontweight='bold')
+ax.set_xlabel('Month', fontsize=fz, fontweight='bold')
 ax.set_title('Mean surface downward SW radiation flux', 
                 fontweight='bold')
+ax.grid(True)
 plt.savefig('annualcycle-surf-swdown.png')
 #plt.show()
