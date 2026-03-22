@@ -32,6 +32,7 @@ zonal = zonal.rename({'lat':'latitude'}) #i dont know why the name changed to la
 
 #Difference between annual and zonal:
 diff = annual - zonal
+diff2d = diff[::6, ::6]
 
 # Figure and map projection
 fig = plt.figure(figsize=(20, 5))
@@ -45,7 +46,7 @@ levels = np.arange(-9, 9, 3)
 cmap = plt.get_cmap('turbo', nlevels)
 mylinestyles = ['--' if l < 0 else '-' for l in levels]
 
-cs = diff.plot.contour(
+cs = diff2d.plot.contour(
         ax=ax, 
         x="longitude", 
         y="latitude", 
@@ -80,5 +81,5 @@ ax.set_title('Annual mean - Averaged zonal mean: Surface temperature (from ERA5 
              fontsize=20,
              fontweight='bold')
 
-#plt.show()
-plt.savefig("diffannualzonal_surftemp.png")
+plt.show()
+#plt.savefig("diffannualzonal_surftemp.png")

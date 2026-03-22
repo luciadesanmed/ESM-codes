@@ -10,15 +10,14 @@ from pathlib import Path
 dat_path = Path("/home/desan/ESM-data/")
 
 #Cases:
-#cases = ('pr_annualmean_EC-Earth3.nc', 'pr_annualmean_EC-Earth3-AerChem.nc','pr_annualmean_EC-Earth3-Veg-LR.nc',
-#          'pr_annualmean_ERA5.nc', 'tas_annualmean_EC-Earth3.nc', 'tas_annualmean_EC-Earth3-AerChem.nc',
-#          'tas_annualmean_EC-Earth3-Veg-LR.nc','tas_annualmean_ERA5.nc', 'rh_annualmean_EC-Earth3.nc',
-#          'rh_annualmean_EC-Earth3-AerChem.nc','rh_annualmean_EC-Earth3-Veg-LR.nc', 'rh_annualmean_ERA5.nc')
 cases = ('pr_annualmean_EC-Earth3.nc', 'pr_annualmean_EC-Earth3-AerChem.nc','pr_annualmean_EC-Earth3-Veg-LR.nc',
          'tas_annualmean_EC-Earth3.nc', 'tas_annualmean_EC-Earth3-AerChem.nc', 'tas_annualmean_EC-Earth3-Veg-LR.nc',
          'hurs_annualmean_EC-Earth3.nc', 'hurs_annualmean_EC-Earth3-AerChem.nc','hurs_annualmean_EC-Earth3-Veg-LR.nc')
+caseera5 = ('tp_annualmean_ERA5.nc', 't2m_annualmean_ERA5.nc', 'rh_annualmean_ERA5.nc')
 
 variab = ('pr', 'tas', 'hurs')
+variabera5 = ('tp', 't2m', 'rh')
+
 cmaps = ('YlGnBu','turbo','YlGnBu') #_r to invert the colormap
 nlevels1 = (200, 200, 200) 
 vmin1 = (0, -30, 0)
@@ -26,8 +25,7 @@ vmax1 = (10.1, 30.1, 100.1)
 cticks = (1, 5, 20)
 units = ('mm/day', '°C', '%')
 cbarext = ('max','both','neither')
-exps = ('EC-Earth3 (hist):', 'EC-Earth3-AerChem (hist):', 'EC-Earth3-Veg-LR (hist):')
-#exps = ('EC-Earth3 (hist):', 'EC-Earth3-AerChem (hist):', 'EC-Earth3-Veg-LR (hist):', 'ERA5 (1970-2014):')
+exps = ('EC-Earth3:', 'EC-Earth3-AerChem:', 'EC-Earth3-Veg-LR:', 'ERA5 (1970-2014):')
 
 #Tuple with cases:
 texts = ('Precipitation', 'Temperature (surface)', 'Relative humidity (surface)')
