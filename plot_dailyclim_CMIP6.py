@@ -7,10 +7,11 @@ from pathlib import Path
 dat_path = Path("/home/desan/ESM-data/")
 
 variab = ('pr', 'tas', 'hurs')
+variabera5 = ('tp', 't2m', 'tp')
 units = ('mm/day', '°C', '%')
 exps = ('EC-Earth3', 'EC-Earth3-AerChem', 'EC-Earth3-Veg-LR')
 texts = ('Precipitation', 'Temperature', 'Relative Humidity')
-colors = ['#1f77b4', '#d62728', '#2ca02c']
+colors = ['#1f77b4', '#d62728', '#2ca02c', 'black']
 
 #Central days of each month to center labels
 month_mid = [15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349]
@@ -59,4 +60,5 @@ for idx, v_name in enumerate(variab):
     ax.legend(loc='upper right', fontsize=fz-6, frameon=True)
     
     plt.tight_layout()
-    plt.savefig(f'daily_annual_clim_{v_name}.png', dpi=300)
+    plt.show()
+    #plt.savefig(f'daily_annual_clim_{v_name}.png', dpi=300)
