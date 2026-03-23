@@ -1,64 +1,71 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
-import matplotlib.colors as mcolors
 from pathlib import Path
 
 # Data path
 era_path = Path("/home/desan/ESM-data/")
-pet = era_path / 'pev_ags_dec_hourlyclim.nc'
-p = era_path / 'tp_ags_dec_hourlyclim.nc'
-e = era_path / 'e_ags_dec_hourlyclim.nc'
-temp = era_path / 't2m_ags_dec_hourlyclim.nc'
+months = ('jul', 'dec')
+styles = {'jul': '-', 'dec': '--'}
 
-cases = (pet, p, e, temp)
-varc = ('pev', 'tp','e', 't2m')
+# Increased Font Sizes
+label_fz = 16    # Axis titles
+tick_fz = 14     # Axis numbers
+legend_fz = 12   # Legend text
+title_fz = 18    # Main title
 
-#latmin =  21.5139417 #21°30'50.19"N
-#latmax =  22.4147556 #22°24'53.12"N
-#lonmin = 257.052264 #102°56'51.85"O -102.947736
-#lonmax = 258.204600 #101°47'43.44"O -101.7953997
+mth = np.arange(1, 25, 1)
 
-n=0
-var = [  ]
-for i in cases:
-    data = xr.open_dataset(i)
-    dat = data[varc[n]].squeeze()
-    var.append(dat)
-    n = n+1
-
-mth = np.arange(1, 24.1, 1) #24 hours
-
-fz = 12
-fig, ax1 = plt.subplots()
+fig, ax1 = plt.subplots(figsize=(12, 7)) # Slightly larger figure for larger fonts
 ax2 = ax1.twinx()
 
-ax1.plot(mth, -1000*var[0],
-          color='k',
-           linestyle='-')
-ax1.plot(mth, 1000*var[1],
-           color='b',
-           linestyle='--')
-ax1.plot(mth, -1000*var[2],
-         color='r',
-         linestyle='--')
-ax1.set_xlabel("Hour", fontsize=fz, fontweight='bold')
-ax1.set_ylabel(r" mm day$^{-1}$", fontsize=fz, fontweight='bold')
-#plt.yticks(np.arange(-50,300.1,50))
-ax1.set_xticks(np.arange(1, 24.1, 1))
-ax1.set_ylim(-0.05, 0.7)
-#plt.ylim(-49, 300)
-ax2.plot(mth, var[3]-273.15,
-         color='y',
-         linestyle='--')
-ax1.legend(['PET','P','E'],
-             edgecolor='white')
-ax2.set_ylabel('Temperature (°C)', fontsize=fz, fontweight='bold', color='y')
-ax2.set_ylim(6, 26)
-#ax1.legend('T', edgecolor='white')
-plt.title('Terrestrial water balance (ERA5 1991-2020) \nAguascalientes, Mexico (July)',
-                fontweight='bold')
+for m in months:
+    # --- Data Loading ---
+    ds_pet = xr.open_dataset(era_path / f'pev_ags_{m}_hourlyclim.nc')['pev'].squeeze() * -1000
+    ds_p   = xr.open_dataset(era_path / f'tp_ags_{m}_hourlyclim.nc')['tp'].squeeze() * 1000
+    ds_e   = xr.open_dataset(era_path / f'e_ags_{m}_hourlyclim.nc')['e'].squeeze() * -1000
+    ds_t   = xr.open_dataset(era_path / f't2m_ags_{m}_hourlyclim.nc')['t2m'].squeeze() - 273.15
+    
+    ls = styles[m]
+    
+    # --- Plotting ---
+    ax1.plot(mth, ds_pet*24, color='k', linestyle=ls, label=f'PET ({m})', linewidth=2)
+    ax1.plot(mth, ds_p*24,   color='b', linestyle=ls, label=f'P ({m})',   linewidth=2)
+    ax1.plot(mth, ds_e*24,   color='r', linestyle=ls, label=f'E ({m})',   linewidth=2)
+    
+    ax2.plot(mth, ds_t,   color='y', linestyle=ls, label=f'Temp ({m})', linewidth=2.5)
 
+# --- X-Axis (Every hour) ---
+ax1.set_xlabel("Hour", fontsize=label_fz, fontweight='bold')
+ax1.set_xticks(np.arange(1, 25, 1)) # Labels for every single hour
+ax1.tick_params(axis='x', labelsize=tick_fz)
 
-plt.savefig('prec_hourlyclim_dec.png', dpi=300, bbox_inches='tight')
+# --- Primary Y-Axis (Water Balance) ---
+ax1.set_ylabel(r"mm day$^{-1}$", fontsize=label_fz, fontweight='bold')
+ax1.tick_params(axis='y', labelsize=tick_fz)
+#ax1.set_ylim(-0.05, 0.7)
+
+# --- Secondary Y-Axis (Temperature) - YELLOW ---
+ax2.set_ylabel('Temperature (°C)', fontsize=label_fz, fontweight='bold', color='y')
+ax2.tick_params(axis='y', labelcolor='y', color='y', labelsize=tick_fz)
+ax2.spines['right'].set_color('y')
+ax2.set_ylim(6, 30)
+
+# --- Combined Legend ---
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+
+ax1.legend(lines1 + lines2, labels1 + labels2, 
+           loc='upper left', 
+           ncol=2, 
+           edgecolor='white', 
+           fontsize=legend_fz,
+           framealpha=0.8)
+
+plt.title('Terrestrial Water Balance (ERA5 1991-2020)\nAguascalientes, Mexico', 
+          fontsize=title_fz, fontweight='bold')
+
+plt.tight_layout()
 #plt.show()
+plt.savefig('hourlyclim_prec.png',dpi=300, bbox_inches='tight')
+
