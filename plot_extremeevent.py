@@ -43,7 +43,7 @@ ax1.plot(mth, -1000*var[2],
          color='r',
          linestyle='--')
 ax1.set_xlabel("Hour", fontsize=fz, fontweight='bold')
-ax1.set_ylabel(r" mm day$^{-1}$", fontsize=fz, fontweight='bold')
+ax1.set_ylabel(r" mm/hour", fontsize=fz, fontweight='bold')
 #plt.yticks(np.arange(-50,300.1,50))
 ax1.set_xticks(np.arange(1, 24.1, 1))
 #plt.ylim(-49, 300)
@@ -53,10 +53,11 @@ ax2.plot(mth, var[3]-273.15,
 ax1.legend(['PET','P','E'],
              edgecolor='white')
 ax2.set_ylabel('Temperature (°C)', fontsize=fz, fontweight='bold', color='y')
+ax2.tick_params(axis='y', labelcolor='y')
 #ax1.legend('T', edgecolor='white')
-plt.title('Terrestrial water balance (ERA5 1991-2020) \nAguascalientes, Mexico (9 march 2016)',
+plt.title('Terrestrial water balance (ERA5: 9 march 2016) \nAguascalientes, Mexico',
                 fontweight='bold')
 
 
-plt.savefig('ags-extremeevent.png')
+plt.savefig('prec_extremeevent.png')
 #plt.show()

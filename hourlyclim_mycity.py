@@ -41,9 +41,9 @@ ax1.set_xticks(np.arange(1, 25, 1)) # Labels for every single hour
 ax1.tick_params(axis='x', labelsize=tick_fz)
 
 # --- Primary Y-Axis (Water Balance) ---
-ax1.set_ylabel(r"mm day$^{-1}$", fontsize=label_fz, fontweight='bold')
+ax1.set_ylabel(r"mm/day", fontsize=label_fz, fontweight='bold')
 ax1.tick_params(axis='y', labelsize=tick_fz)
-#ax1.set_ylim(-0.05, 0.7)
+ax1.set_ylim(-0.1, 16.5)
 
 # --- Secondary Y-Axis (Temperature) - YELLOW ---
 ax2.set_ylabel('Temperature (°C)', fontsize=label_fz, fontweight='bold', color='y')
@@ -61,6 +61,8 @@ ax1.legend(lines1 + lines2, labels1 + labels2,
            edgecolor='white', 
            fontsize=legend_fz,
            framealpha=0.8)
+
+ax1.grid(True, linestyle='--', alpha=0.5)
 
 plt.title('Terrestrial Water Balance (ERA5 1991-2020)\nAguascalientes, Mexico', 
           fontsize=title_fz, fontweight='bold')

@@ -8,7 +8,7 @@ directory_path = '/home/desan/RUOA-data'
 years = range(2015, 2026)
 months = ['07', '12']
 cols_of_interest = ['Temp_Avg', 'Rain_Tot']
-
+fz = 16
 def process_ruoa_data():
     all_data = []
     file_pattern = os.path.join(directory_path, "RUOA_agsc_*.csv")
@@ -82,24 +82,30 @@ def plot_data(hourly_means):
         
         # Left Axis: Precipitation (Scaled)
         ax1.plot(m_data['Hour'], rain_scaled, 
-                 linestyle=styles[month]['rain'], color='tab:blue', linewidth=1.5,
-                label=f"Rain {month_names[month]} (Scaled $\\times$ 24)")
+                 linestyle=styles[month]['rain'], color='b', linewidth=1.5,
+                label=f"Rain {month_names[month]}")
         
         # Right Axis: Temperature
         ax2.plot(m_data['Hour'], m_data['Temp_Avg'], 
                 linestyle=styles[month]['temp'], color='y', linewidth=2,
                 label=f"Mean Temp {month_names[month]}")
 
-    ax1.set_xlabel('Hour of Day (1-24)', fontsize=12)
-    ax1.set_ylabel('Precipitation (mm/day)', color='tab:blue', fontsize=12)
-    ax2.set_ylabel(r'Temperature ($^{\circ}$C)', color='y', fontsize=12)
-    
-    plt.title('Hourly Mean RUOA station (2015-2025)', fontsize=14)
+    ax1.set_xlabel('Hour', fontweight='bold', fontsize=fz)
+    ax1.set_ylabel('Precipitation (mm/day)', color='b', fontweight='bold', fontsize=fz)
+    ax1.tick_params(axis='x', labelsize=fz)
+    ax1.tick_params(axis='y', labelcolor='b', color='b', labelsize=fz)
+    ax1.set_ylim(-.1, 16.5)
+    ax2.set_ylabel(r'Temperature ($^{\circ}$C)', color='y', fontweight='bold',fontsize=fz)
+    ax2.tick_params(axis='y', labelcolor='y', color='y', labelsize=fz)
+    ax2.set_ylim(6, 30)
+    #ax2.set_yticks()
+
+    plt.title('Hourly Mean RUOA station (2015-2025)', fontsize=fz, fontweight='bold')
     
     # Combined legend
     h1, l1 = ax1.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax1.legend(h1 + h2, l1 + l2, loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=2)
+    ax1.legend(h1 + h2, l1 + l2, loc='upper left', ncol=2, fontsize = fz)
     
     # Set x-ticks from 1 to 24 and set x-limits
     ax1.set_xticks(range(1, 25))
@@ -107,8 +113,8 @@ def plot_data(hourly_means):
     ax1.grid(True, linestyle='--', alpha=0.5)
     
     plt.tight_layout()
-    #plt.savefig('precipitation_shifted_plot.png')
-    plt.show()
+    plt.savefig('ruoa_obs.png')
+   # plt.show()
 
 # Execute analysis
 results = process_ruoa_data()
